@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tribute to Indian Republic Day - Celebrating 26th January with history, gallery, and interactive quiz">
+    <meta name="keywords" content="Republic Day, India, 26 January, Constitution, Indian Flag, Ashoka Chakra">
+    <meta name="author" content="Indian Tribute">
+    <title>Republic Day India - 26th January | Unity in Diversity</title>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --green: #138808;
+            --chakra-blue: #000080;
+            --light-bg: #f8fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background-color: var(--light-bg);
+            scroll-behavior: smooth;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Tricolor Wavy Background */
+        .tricolor-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, 
+                rgba(255, 153, 51, 0.08) 0%, 
+                rgba(255, 255, 255, 0.9) 50%, 
+                rgba(19, 136, 8, 0.08) 100%);
+            background-size: 300% 300%;
+            animation: gradientBG 20s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Intro Overlay */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #0f172a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 1s ease;
+        }
+
+        #intro-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .typewriter-text {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 800;
+            z-index: 10;
+            text-align: center;
+            padding: 0 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Flag Animation */
+        .flag-container {
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+            transition: transform 0.4s ease;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .flag-container:hover {
+            transform: translateY(-5px) scale(1.01);
+        }
+
+        /* Chakra Rotation */
+        .chakra-group {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--saffron), var(--white), var(--green));
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        /* Card Hover Effects */
+        .info-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 1rem;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Quiz Styles */
+        .option-btn {
+            transition: all 0.3s;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background-color: #f8fafc;
+            transform: translateX(5px);
+            border-color: var(--saffron);
+        }
+
+        .option-btn.correct {
+            background-color: #dcfce7 !important;
+            border-color: #16a34a !important;
+            color: #166534;
+        }
+
+        .option-btn.wrong {
+            background-color: #fee2e2 !important;
+            border-color: #dc2626 !important;
+            color: #991b1b;
+        }
+
+        .option-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Audio Control */
+        .audio-fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--saffron), var(--chakra-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid white;
+        }
+
+        .audio-fab:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .music-bars span {
+            display: inline-block;
+            width: 4px;
+            background: white;
+            animation: bounce 1s infinite ease-in-out;
+            margin: 0 1px;
+        }
+
+        .music-bars span:nth-child(1) {
+            height: 10px;
+            animation-delay: 0.1s;
+        }
+
+        .music-bars span:nth-child(2) {
+            height: 15px;
+            animation-delay: 0.2s;
+        }
+
+        .music-bars span:nth-child(3) {
+            height: 10px;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.8); }
+        }
+
+        .playing .music-bars span {
+            animation-play-state: running;
+        }
+
+        .paused .music-bars span {
+            animation-play-state: paused;
+            transform: scaleY(1);
+        }
+
+        /* Navigation */
+        .nav-link {
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--saffron);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Section Spacing */
+        section {
+            padding: 5rem 1rem;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 3rem 1rem;
+            }
+        }
+
+        /* Gallery Item */
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+        }
+
+        .gallery-item img {
+            transition: transform 0.7s ease;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--saffron), var(--chakra-blue));
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: linear-gradient(to right, var(--chakra-blue), var(--saffron));
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--chakra-blue);
+            border: 2px solid var(--chakra-blue);
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            transition: all 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-secondary:hover {
+            background: var(--chakra-blue);
+            color: white;
+        }
+
+        /* Responsive Typography */
+        .responsive-heading {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+
+        .responsive-subheading {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- Tricolor Background -->
+    <div class="tricolor-bg"></div>
+
+    <!-- Intro Overlay -->
+    <div id="intro-overlay">
+        <canvas id="intro-canvas"></canvas>
+        <div id="intro-text-1" class="typewriter-text">
+            <span class="text-orange-400">Happy Republic Day</span> <span class="text-white">🇮🇳</span>
+        </div>
+        <div id="intro-text-2" class="typewriter-text text-xl mt-4 text-gray-300 font-light">
+            26 January – Pride of a Nation
+        </div>
+        <button id="enter-btn" class="mt-12 px-10 py-3 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-full font-semibold hover:from-orange-600 hover:to-red-700 transition duration-300 shadow-lg transform hover:scale-105 opacity-0">
+            <i class="fas fa-flag mr-2"></i> Jai Hind (Enter)
+        </button>
+        <p class="text-gray-400 text-sm mt-6 absolute bottom-6">Scroll after entering</p>
+    </div>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="bg-music" loop preload="metadata">
+        <source src="https://upload.wikimedia.org/wikipedia/commons/4/41/Vande_Mataram_%28instrumental%29.ogg" type="audio/ogg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Floating Music Button -->
+    <div class="audio-fab paused" id="music-toggle" title="Play/Pause Music" aria-label="Toggle background music">
+        <div class="music-bars flex gap-1 items-end h-6">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-md shadow-md transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold font-montserrat tracking-wide">
+                <span class="text-orange-500">India</span><span class="text-blue-900">77</span><span
+                    class="text-green-600">RD</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex space-x-8 font-medium text-sm">
+                <a href="#hero" class="nav-link text-gray-700 hover:text-orange-500 transition">Home</a>
+                <a href="#history" class="nav-link text-gray-700 hover:text-blue-900 transition">History</a>
+                <a href="#gallery" class="nav-link text-gray-700 hover:text-green-600 transition">Gallery</a>
+                <a href="#quiz" class="nav-link text-gray-700 hover:text-orange-500 transition">Quiz</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="md:hidden bg-white py-4 px-6 shadow-lg hidden">
+            <div class="flex flex-col space-y-4">
+                <a href="#hero" class="text-gray-700 hover:text-orange-500 transition py-2 border-b border-gray-100">Home</a>
+                <a href="#history" class="text-gray-700 hover:text-blue-900 transition py-2 border-b border-gray-100">History</a>
+                <a href="#gallery" class="text-gray-700 hover:text-green-600 transition py-2 border-b border-gray-100">Gallery</a>
+                <a href="#quiz" class="text-gray-700 hover:text-orange-500 transition py-2">Quiz</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex flex-col justify-center items-center pt-16 px-4 relative">
+        <div class="container mx-auto max-w-6xl">
+            <!-- SVG Flag Implementation -->
+            <div class="flag-container mb-12 opacity-0 transform translate-y-10" id="hero-flag">
+                <svg viewBox="0 0 900 600" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"
+                    class="w-full h-auto rounded-xl shadow-2xl">
+                    <!-- Saffron Band -->
+                    <rect x="0" y="0" width="900" height="200" fill="#FF9933" />
+                    <!-- White Band -->
+                    <rect x="0" y="200" width="900" height="200" fill="#FFFFFF" />
+                    <!-- Green Band -->
+                    <rect x="0" y="400" width="900" height="200" fill="#138808" />
+
+                    <!-- Ashoka Chakra Group -->
+                    <g transform="translate(450, 300)">
+                        <g class="chakra-group">
+                            <!-- Outer Circle -->
+                            <circle cx="0" cy="0" r="85" fill="none" stroke="#000080" stroke-width="4" />
+
+                            <!-- 24 Spokes -->
+                            <g id="spokes" stroke="#000080" stroke-width="2" stroke-linecap="round">
+                                <!-- Generated spokes for 24 positions -->
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(0)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(15)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(30)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(45)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(60)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(75)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(90)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(105)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(120)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(135)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(150)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(165)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(180)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(195)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(210)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(225)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(240)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(255)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(270)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(285)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(300)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(315)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(330)" />
+                                <line x1="0" y1="0" x2="0" y2="-85" transform="rotate(345)" />
+                            </g>
+
+                            <!-- Center Hub -->
+                            <circle cx="0" cy="0" r="10" fill="#000080" />
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="text-center space-y-6 max-w-3xl mx-auto hero-text opacity-0">
+                <h1 class="responsive-heading font-bold text-gray-800 leading-tight">
+                    Celebrating <span class="text-orange-500">Unity</span> in <span class="text-green-600">Diversity</span>
+                </h1>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Honoring the day when India's Constitution came into effect, establishing the world's largest democracy.
+                </p>
+                <div class="pt-8 flex flex-wrap justify-center gap-4">
+                    <a href="#history" class="btn-primary">
+                        <i class="fas fa-book-open mr-2"></i> Explore History
+                    </a>
+                    <a href="#quiz" class="btn-secondary">
+                        <i class="fas fa-question-circle mr-2"></i> Take Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 animate-bounce opacity-70">
+            <a href="#history" class="flex flex-col items-center text-gray-600 hover:text-blue-900 transition">
+                <span class="text-sm mb-2">Scroll</span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- History / Educational Section -->
+    <section id="history" class="py-16 bg-white/70">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 section-title">
+                <h2 class="responsive-subheading font-bold mb-4 text-blue-900">The Journey to Republic</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-orange-500 to-green-600 mx-auto rounded"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Understanding the significance of January 26 in India's constitutional history</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="info-card bg-white p-8 shadow-lg">
+                    <div class="flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-6 mx-auto">
+                        <i class="fas fa-scroll text-3xl text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-center">The Constitution</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed text-center">
+                        Adopted on 26th November 1949, it came into effect on 26th January 1950, making India a sovereign, socialist, secular, and democratic republic.
+                    </p>
+                    <div class="mt-6 text-center">
+                        <span class="inline-block px-3 py-1 bg-blue-50 text-blue-800 text-xs font-semibold rounded-full">395 Articles</span>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="info-card bg-white p-8 shadow-lg">
+                    <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-6 mx-auto">
+                        <i class="fas fa-landmark text-3xl text-blue-900"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-center">Purna Swaraj</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed text-center">
+                        January 26 was chosen to honor the "Purna Swaraj" (Total Independence) declaration made by the Indian National Congress in 1930.
+                    </p>
+                    <div class="mt-6 text-center">
+                        <span class="inline-block px-3 py-1 bg-orange-50 text-orange-800 text-xs font-semibold rounded-full">1930 Declaration</span>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="info-card bg-white p-8 shadow-lg">
+                    <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6 mx-auto">
+                        <i class="fas fa-medal text-3xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4 text-center">Rajpath Parade</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed text-center">
+                        The magnificent parade at Kartavya Path showcases India's defense capability, cultural and social heritage to the world.
+                    </p>
+                    <div class="mt-6 text-center">
+                        <span class="inline-block px-3 py-1 bg-green-50 text-green-800 text-xs font-semibold rounded-full">Annual Tradition</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-16 bg-gradient-to-b from-white to-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16 section-title">
+                <h2 class="responsive-subheading font-bold mb-4 text-blue-900">Glimpses of Glory</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-green-600 to-orange-500 mx-auto rounded"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Visual journey through India's Republic Day celebrations</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[200px]">
+                <!-- Item 1 -->
+                <div class="gallery-item lg:col-span-2 lg:row-span-2">
+                    <img src="https://images.unsplash.com/photo-1587474260584-136574528ed5?w=800&auto=format&fit=crop&q=80"
+                        alt="India Gate on Republic Day" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="text-white">
+                            <h3 class="text-xl font-bold">India Gate</h3>
+                            <p class="text-sm opacity-90">The national monument illuminated in tricolor</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1463592177119-bab2a00f3ccb?w=500&auto=format&fit=crop&q=80"
+                        alt="Indian cultural dance" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="text-white">
+                            <h3 class="text-lg font-bold">Cultural Heritage</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1611680551824-535bd90d1415?w=500&auto=format&fit=crop&q=80"
+                        alt="Republic Day parade" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="text-white">
+                            <h3 class="text-lg font-bold">The Grand Parade</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="gallery-item lg:col-span-2">
+                    <img src="https://images.unsplash.com/photo-1737996159880-84645414d1db?w=800&auto=format&fit=crop&q=80"
+                        alt="Indian Army march past" loading="lazy">
+                    <div class="gallery-overlay">
+                        <div class="text-white">
+                            <h3 class="text-xl font-bold">Service Before Self</h3>
+                            <p class="text-sm opacity-90">Indian Armed Forces showcasing discipline</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="py-16 bg-gradient-to-br from-orange-50 to-blue-50">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-12 section-title">
+                <h2 class="responsive-subheading font-bold mb-4 text-blue-900">Republic Day Quiz</h2>
+                <div class="w-24 h-1.5 bg-gradient-to-r from-orange-500 to-blue-900 mx-auto rounded"></div>
+                <p class="text-gray-600 mt-4">Test your knowledge about the Indian Constitution and Republic Day</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-8 relative overflow-hidden">
+                <!-- Progress Bar -->
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span id="question-number" class="text-sm font-bold text-blue-900 uppercase">Question 1 of 5</span>
+                        <span id="score-display" class="text-sm font-semibold text-gray-600">Score: <span id="current-score">0</span>/5</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill" style="width: 20%"></div>
+                    </div>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-container">
+                    <div class="mb-8">
+                        <h3 id="question-text" class="text-xl md:text-2xl font-bold text-gray-800 leading-tight">Who was the first President of India?</h3>
+                    </div>
+
+                    <div id="options-container" class="space-y-4 mb-8">
+                        <!-- Options injected via JS -->
+                    </div>
+
+                    <div id="feedback" class="mb-6 min-h-8">
+                        <!-- Feedback appears here -->
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button id="restart-btn" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition hidden">
+                            <i class="fas fa-redo mr-2"></i> Restart
+                        </button>
+                        <button id="next-btn" class="ml-auto px-8 py-3 bg-blue-900 text-white rounded-lg font-semibold hover:bg-blue-800 transition hidden">
+                            Next Question <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result Container (Hidden initially) -->
+                <div id="result-container" class="hidden text-center py-8">
+                    <div class="text-6xl mb-6">🇮🇳</div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Quiz Completed!</h3>
+                    <p class="text-gray-600 mb-2">You scored</p>
+                    <p class="text-4xl font-bold mb-6 text-blue-900"><span id="final-score">0</span>/5</p>
+                    
+                    <div id="result-message" class="mb-8">
+                        <!-- Dynamic message based on score -->
+                    </div>
+                    
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button onclick="restartQuiz()" class="btn-primary">
+                            <i class="fas fa-redo mr-2"></i> Try Again
+                        </button>
+                        <a href="#history" class="btn-secondary">
+                            <i class="fas fa-book mr-2"></i> Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8 text-gray-500 text-sm">
+                <p>Challenge yourself with 5 questions about India's Republic Day</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <div class="flex justify-center items-center gap-4 mb-8">
+                <div class="w-12 h-1 bg-orange-500"></div>
+                <div class="w-12 h-1 bg-white"></div>
+                <div class="w-12 h-1 bg-green-500"></div>
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-6">Unity in Diversity</h3>
+            
+            <p class="font-light text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
+                "Freedom is not given - it is taken. Be proud to be an Indian."
+            </p>
+            
+            <div class="flex justify-center space-x-6 mb-8">
+                <a href="#" class="text-gray-300 hover:text-white transition" aria-label="Facebook">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition" aria-label="Twitter">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition" aria-label="Instagram">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-300 hover:text-white transition" aria-label="YouTube">
+                    <i class="fab fa-youtube text-xl"></i>
+                </a>
+            </div>
+            
+            <p class="text-sm font-medium mb-2">
+                Built with <span class="text-red-400 text-lg">❤️</span> for India 🇮🇳
+            </p>
+            <p class="text-xs text-gray-400 mt-8">&copy; 2026 Republic Day Tribute. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // --- 1. Intro Animation & Particles ---
+        const canvas = document.getElementById('intro-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let animationId;
+
+        // Optimized canvas resizing
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * window.devicePixelRatio;
+            canvas.height = window.innerHeight * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Particle class for intro animation
+        class Particle {
+            constructor() {
+                this.x = canvas.width / (2 * window.devicePixelRatio);
+                this.y = canvas.height / (2 * window.devicePixelRatio);
+                this.speed = Math.random() * 4 + 2;
+                this.angle = Math.random() * Math.PI * 2;
+                this.color = ['#FF9933', '#FFFFFF', '#138808'][Math.floor(Math.random() * 3)];
+                this.size = Math.random() * 3 + 1;
+                this.life = 100;
+                this.vx = Math.cos(this.angle) * this.speed;
+                this.vy = Math.sin(this.angle) * this.speed;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 1.5;
+                this.size *= 0.96;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Create particle blast effect
+        function createBlast() {
+            for (let i = 0; i < 120; i++) particles.push(new Particle());
+        }
+
+        // Animate particles
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update and draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // Remove dead particles
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            // Continue animation if particles exist
+            if (particles.length > 0) {
+                requestAnimationFrame(animateParticles);
+            }
+        }
+
+        // --- 2. GSAP Animations & Flow ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start Particle Blast
+            createBlast();
+            animateParticles();
+
+            // Timeline for Intro
+            const tl = gsap.timeline();
+            
+            tl.to("#intro-text-1", { 
+                opacity: 1, 
+                duration: 1.5, 
+                y: -20, 
+                ease: "power2.out" 
+            })
+            .to("#intro-text-2", { 
+                opacity: 1, 
+                duration: 1.5, 
+                y: -10, 
+                ease: "power2.out" 
+            }, "-=0.5")
+            .to("#enter-btn", { 
+                opacity: 1, 
+                y: 0, 
+                duration: 0.8, 
+                ease: "back.out(1.7)" 
+            }, "-=0.5");
+
+            // Interactions
+            const enterBtn = document.getElementById('enter-btn');
+            const overlay = document.getElementById('intro-overlay');
+            const audio = document.getElementById('bg-music');
+            const musicToggle = document.getElementById('music-toggle');
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Start experience function
+            const startExperience = () => {
+                // Fade out overlay
+                gsap.to(overlay, {
+                    opacity: 0,
+                    duration: 1,
+                    onComplete: () => {
+                        overlay.style.display = 'none';
+                        // Trigger Scroll Animations after intro
+                        initScrollAnimations();
+                    }
+                });
+
+                // Play Audio with user interaction
+                audio.volume = 0.5;
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        musicToggle.classList.remove('paused');
+                        musicToggle.classList.add('playing');
+                    }).catch(error => {
+                        console.log("Audio autoplay prevented. User interaction required.");
+                    });
+                }
+            };
+
+            // Enter button click
+            enterBtn.addEventListener('click', startExperience);
+
+            // Audio Toggle Logic
+            musicToggle.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play().then(() => {
+                        musicToggle.classList.remove('paused');
+                        musicToggle.classList.add('playing');
+                    });
+                } else {
+                    audio.pause();
+                    musicToggle.classList.remove('playing');
+                    musicToggle.classList.add('paused');
+                }
+            });
+
+            // Mobile menu toggle
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                
+                // Change icon
+                const icon = mobileMenuBtn.querySelector('i');
+                if (mobileMenu.classList.contains('hidden')) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                } else {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                }
+            });
+
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenuBtn.querySelector('i').classList.remove('fa-times');
+                    mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                });
+            });
+        });
+
+        // --- 3. Scroll Animations (ScrollTrigger) ---
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Hero Text & Flag
+            gsap.to("#hero-flag", { 
+                opacity: 1, 
+                y: 0, 
+                duration: 1.2, 
+                ease: "power3.out" 
+            });
+            
+            gsap.to(".hero-text", { 
+                opacity: 1, 
+                y: 0, 
+                duration: 1, 
+                delay: 0.3, 
+                ease: "power2.out" 
+            });
+
+            // Section Headers
+            gsap.utils.toArray('.section-title').forEach(section => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    y: 40,
+                    opacity: 0,
+                    duration: 0.8
+                });
+            });
+
+            // Cards with staggered animation
+            gsap.utils.toArray('.info-card').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 85%",
+                        toggleActions: "play none none none"
+                    },
+                    y: 60,
+                    opacity: 0,
+                    duration: 0.8,
+                    delay: i * 0.15,
+                    ease: "back.out(1.2)"
+                });
+            });
+
+            // Gallery items
+            gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 90%",
+                        toggleActions: "play none none none"
+                    },
+                    scale: 0.9,
+                    opacity: 0,
+                    duration: 0.7,
+                    delay: i * 0.1,
+                    ease: "power2.out"
+                });
+            });
+        }
+
+        // --- 4. Quiz Logic ---
+        const quizData = [
+            {
+                q: "When did the Constitution of India come into effect?",
+                options: ["26 Nov 1949", "15 Aug 1947", "26 Jan 1950", "2 Oct 1948"],
+                a: 2,
+                fact: "The Constitution was adopted on 26 November 1949 and came into effect on 26 January 1950."
+            },
+            {
+                q: "Who was the Chairman of the Drafting Committee of the Indian Constitution?",
+                options: ["Jawaharlal Nehru", "Dr. B.R. Ambedkar", "Sardar Patel", "Dr. Rajendra Prasad"],
+                a: 1,
+                fact: "Dr. B.R. Ambedkar is known as the Father of the Indian Constitution."
+            },
+            {
+                q: "How many spokes does the Ashoka Chakra have?",
+                options: ["20", "22", "24", "26"],
+                a: 2,
+                fact: "The 24 spokes represent the 24 hours of the day, suggesting that the wheel of law should turn continuously."
+            },
+            {
+                q: "What does the Saffron color in the Indian flag represent?",
+                options: ["Peace and Truth", "Growth and Fertility", "Strength and Courage", "Faith and Chivalry"],
+                a: 2,
+                fact: "Saffron represents strength and courage, white represents peace and truth, and green represents growth and fertility."
+            },
+            {
+                q: "Who takes the military salute during the Republic Day parade in New Delhi?",
+                options: ["The Prime Minister", "The President", "The Chief Justice", "The Defence Minister"],
+                a: 1,
+                fact: "The President of India, who is the Commander-in-Chief of the Indian Armed Forces, takes the salute."
+            }
+        ];
+
+        // Quiz state variables
+        let currentQ = 0;
+        let score = 0;
+        let answered = false;
+
+        // DOM elements
+        const qContainer = document.getElementById('quiz-container');
+        const rContainer = document.getElementById('result-container');
+        const qText = document.getElementById('question-text');
+        const optContainer = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const qNum = document.getElementById('question-number');
+        const progressFill = document.getElementById('progress-fill');
+        const feedback = document.getElementById('feedback');
+        const scoreDisplay = document.getElementById('current-score');
+        const finalScore = document.getElementById('final-score');
+        const resultMessage = document.getElementById('result-message');
+
+        // Load quiz question
+        function loadQuiz() {
+            answered = false;
+            nextBtn.classList.add('hidden');
+            restartBtn.classList.add('hidden');
+            feedback.innerHTML = '';
+
+            const data = quizData[currentQ];
+            qNum.innerText = `Question ${currentQ + 1} of ${quizData.length}`;
+            qText.innerText = data.q;
+
+            // Update progress
+            const progress = ((currentQ) / quizData.length) * 100;
+            progressFill.style.width = `${progress}%`;
+
+            // Update score display
+            scoreDisplay.innerText = score;
+
+            // Clear and create options
+            optContainer.innerHTML = '';
+            data.options.forEach((opt, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'option-btn border border-gray-200 p-4 rounded-lg text-gray-700 font-medium';
+                btn.innerHTML = `<span class="mr-3 font-bold">${String.fromCharCode(65 + index)}.</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        // Check answer function
+        function checkAnswer(selected, btnElement) {
+            if (answered) return;
+            answered = true;
+
+            const correct = quizData[currentQ].a;
+            const allOpts = optContainer.children;
+
+            // Disable all options
+            for (let opt of allOpts) {
+                opt.classList.add('disabled');
+                opt.onclick = null;
+            }
+
+            // Check if correct
+            if (selected === correct) {
+                score++;
+                scoreDisplay.innerText = score;
+                btnElement.classList.add('correct');
+                feedback.innerHTML = `<div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p class="text-green-700 font-medium"><i class="fas fa-check-circle mr-2"></i> Correct! Well done.</p>
+                    <p class="text-green-600 text-sm mt-1">${quizData[currentQ].fact}</p>
+                </div>`;
+            } else {
+                btnElement.classList.add('wrong');
+                allOpts[correct].classList.add('correct');
+                feedback.innerHTML = `<div class="p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p class="text-red-700 font-medium"><i class="fas fa-times-circle mr-2"></i> Incorrect. The correct answer is highlighted.</p>
+                    <p class="text-red-600 text-sm mt-1">${quizData[currentQ].fact}</p>
+                </div>`;
+            }
+
+            // Show next button
+            nextBtn.classList.remove('hidden');
+            restartBtn.classList.remove('hidden');
+        }
+
+        // Next button handler
+        nextBtn.onclick = () => {
+            currentQ++;
+            if (currentQ < quizData.length) {
+                loadQuiz();
+            } else {
+                showResults();
+            }
+        };
+
+        // Show results
+        function showResults() {
+            qContainer.classList.add('hidden');
+            rContainer.classList.remove('hidden');
+            finalScore.innerText = score;
+            progressFill.style.width = '100%';
+
+            // Set result message based on score
+            let message = '';
+            if (score === 5) {
+                message = `<div class="p-4 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg">
+                    <p class="text-green-800 font-bold text-lg mb-2"><i class="fas fa-trophy mr-2"></i> Perfect Score!</p>
+                    <p class="text-green-700">You have excellent knowledge about India's Republic Day. Jai Hind!</p>
+                </div>`;
+            } else if (score >= 3) {
+                message = `<div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p class="text-blue-800 font-bold text-lg mb-2"><i class="fas fa-star mr-2"></i> Good Job!</p>
+                    <p class="text-blue-700">You know quite a bit about Republic Day. Keep learning!</p>
+                </div>`;
+            } else {
+                message = `<div class="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                    <p class="text-orange-800 font-bold text-lg mb-2"><i class="fas fa-book mr-2"></i> Keep Learning</p>
+                    <p class="text-orange-700">Explore the history section to learn more about Republic Day.</p>
+                </div>`;
+            }
+            
+            resultMessage.innerHTML = message;
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            score = 0;
+            currentQ = 0;
+            rContainer.classList.add('hidden');
+            qContainer.classList.remove('hidden');
+            loadQuiz();
+        }
+
+        // Add restart functionality to button
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // Initial quiz load
+        loadQuiz();
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-lg', 'py-3');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('shadow-lg', 'py-3');
+                nav.classList.add('py-4');
+            }
+        });
+    </script>
+</body>
+</html>
